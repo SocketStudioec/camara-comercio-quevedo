@@ -2,185 +2,198 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { useState, useEffect } from 'react'
 
-function Countdown({ targetDate }) {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+function pad(n) { return String(n).padStart(2, '0') }
 
+function useCountdown(target) {
+  const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 })
   useEffect(() => {
-    const calc = () => {
-      const diff = new Date(targetDate) - new Date()
-      if (diff <= 0) return setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-      setTimeLeft({
-        days: Math.floor(diff / 86400000),
-        hours: Math.floor((diff % 86400000) / 3600000),
-        minutes: Math.floor((diff % 3600000) / 60000),
-        seconds: Math.floor((diff % 60000) / 1000),
+    const tick = () => {
+      const diff = Math.max(0, new Date(target) - Date.now())
+      setT({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
       })
     }
-    calc()
-    const id = setInterval(calc, 1000)
+    tick()
+    const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [targetDate])
-
-  return (
-    <div className="flex gap-3 sm:gap-4 justify-center">
-      {Object.entries(timeLeft).map(([unit, val]) => (
-        <div key={unit} className="text-center">
-          <div className="w-16 sm:w-20 h-16 sm:h-20 bg-white/15 backdrop-blur-sm border border-white/20 rounded-xl flex items-center justify-center">
-            <span className="font-serif font-bold text-2xl sm:text-3xl text-white tabular-nums">
-              {String(val).padStart(2, '0')}
-            </span>
-          </div>
-          <div className="text-blue-200 text-xs mt-2 capitalize tracking-widest">
-            {unit === 'days' ? 'días' : unit === 'hours' ? 'horas' : unit === 'minutes' ? 'min' : 'seg'}
-          </div>
-        </div>
-      ))}
-    </div>
-  )
+  }, [target])
+  return t
 }
 
 const highlights = [
-  { icon: '🏪', label: 'Stands comerciales', value: '80%+ vendidos' },
-  { icon: '💰', label: 'Ventas 2024', value: '+$480,000' },
-  { icon: '👥', label: 'Empleos generados', value: '1,600+' },
-  { icon: '🎵', label: 'Mi Voz Quevedo', value: '$1,500 en premios' },
+  { n: '+80%', label: 'Stands vendidos' },
+  { n: '$480K', label: 'Ventas edición 2024' },
+  { n: '1,600', label: 'Empleos generados' },
+  { n: '210+', label: 'Locales 2025' },
 ]
 
 export default function ExpoQuevedo() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 })
+  const { d, h, m, s } = useCountdown('2025-09-19T09:00:00-05:00')
 
   return (
-    <section id="expo" ref={ref} className="relative py-20 md:py-28 overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0F2445] via-[#1B3A6B] to-[#0a2550]" />
-      <div className="absolute inset-0 bg-hero-pattern opacity-20" />
+    <section id="expo" ref={ref} className="relative bg-[#0A0F1A] overflow-hidden">
+      {/* Grid texture */}
+      <div className="absolute inset-0 grid-pattern opacity-60" />
 
-      {/* Decorative circles */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 border border-white/5 rounded-full" />
-      <div className="absolute -bottom-32 -left-32 w-80 h-80 border border-white/5 rounded-full" />
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
-        className="absolute top-1/2 -right-48 w-96 h-96 border border-[#D4A028]/10 rounded-full"
-      />
+      {/* Gold top accent */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C8922A] to-transparent" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Badge */}
+      {/* Decorative large text bg */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <span className="font-impact text-[22rem] text-white/[0.02] leading-none select-none tracking-tight whitespace-nowrap">
+          EXPO
+        </span>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 md:py-32">
+
+        {/* ── Encabezado tipo poster ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 32 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-[#D4A028]/20 border border-[#D4A028]/40 text-[#F5CC5C] text-xs font-semibold tracking-wider uppercase px-5 py-2.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 bg-[#D4A028] rounded-full animate-pulse" />
-            Evento del año
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-8 h-px bg-[#C8922A]" />
+            <span className="text-[#C8922A] text-[11px] font-semibold tracking-[0.25em] uppercase">Evento del año</span>
           </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4"
-          >
-            Expo<span className="text-[#F5CC5C]">Quevedo</span> 2025
-          </motion.h2>
+          <div className="border-l-4 border-[#C8922A] pl-8">
+            <div className="font-impact text-[3.5rem] sm:text-[5rem] lg:text-[7rem] leading-none text-white tracking-wider mb-2">
+              EXPO
+            </div>
+            <div className="font-impact text-[3.5rem] sm:text-[5rem] lg:text-[7rem] leading-none text-[#C8922A] tracking-wider mb-4">
+              QUEVEDO
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="font-impact text-2xl sm:text-3xl text-white/40 tracking-widest">2025</span>
+              <div className="w-px h-6 bg-white/20" />
+              <span className="text-white/50 text-sm font-medium tracking-wide">
+                19 · 20 · 21 de Septiembre
+              </span>
+              <div className="w-px h-6 bg-white/20 hidden sm:block" />
+              <span className="text-white/40 text-xs tracking-wide hidden sm:inline">
+                Km 2½ Vía Buena Fe · Centro de Exposiciones
+              </span>
+            </div>
+          </div>
+        </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-blue-200 text-lg max-w-2xl mx-auto leading-relaxed mb-4"
-          >
-            La feria comercial más importante de Los Ríos regresa con más fuerza.
-            Tres días de comercio, cultura, entretenimiento y oportunidades de negocio.
-          </motion.p>
+        {/* ── Layout principal ── */}
+        <div className="grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
 
+          {/* Countdown — 3 cols */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap items-center justify-center gap-4 text-sm text-blue-200 mb-10"
+            initial={{ opacity: 0, x: -24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:col-span-3"
           >
-            <span className="flex items-center gap-1.5">
-              <svg className="w-4 h-4 text-[#D4A028]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              19, 20 y 21 de Septiembre 2025
-            </span>
-            <span className="w-1 h-1 bg-blue-400 rounded-full" />
-            <span className="flex items-center gap-1.5">
-              <svg className="w-4 h-4 text-[#D4A028]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-              </svg>
-              Km 2½ Vía Buena Fe, Centro de Exposiciones
-            </span>
+            <p className="text-white/30 text-[10px] font-semibold tracking-[0.25em] uppercase mb-6">Tiempo restante</p>
+
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
+              {[
+                { val: d, label: 'Días' },
+                { val: h, label: 'Horas' },
+                { val: m, label: 'Min' },
+                { val: s, label: 'Seg' },
+              ].map(({ val, label }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.3 + i * 0.07 }}
+                  className="border border-white/10 bg-white/[0.03] p-4 sm:p-5 text-center"
+                >
+                  <motion.div
+                    key={val}
+                    initial={{ y: -6, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.25 }}
+                    className="font-impact text-3xl sm:text-5xl text-white leading-none mb-1 tabular-nums"
+                  >
+                    {pad(val)}
+                  </motion.div>
+                  <div className="text-white/30 text-[10px] tracking-[0.15em] uppercase">{label}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Highlights */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
+              {highlights.map(({ n, label }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.5 + i * 0.08 }}
+                  className="border border-[#C8922A]/20 bg-[#C8922A]/5 px-4 py-3 text-center"
+                >
+                  <div className="font-display text-lg text-[#C8922A] leading-none mb-0.5">{n}</div>
+                  <div className="text-white/30 text-[10px]">{label}</div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-        </motion.div>
 
-        {/* Countdown */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.7, delay: 0.35 }}
-          className="mb-12"
-        >
-          <p className="text-blue-300 text-center text-sm mb-5 tracking-widest uppercase">Tiempo restante</p>
-          <Countdown targetDate="2025-09-19T09:00:00-05:00" />
-        </motion.div>
+          {/* Info + CTA — 2 cols */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="lg:col-span-2 border border-white/10 bg-white/[0.02] p-7"
+          >
+            <div className="text-[#C8922A] text-[10px] font-bold tracking-[0.2em] uppercase mb-4">Reserva tu stand</div>
 
-        {/* Highlights grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {highlights.map(({ icon, label, value }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }}
-              className="card-glass rounded-xl p-4 text-center hover:border-[#D4A028]/40 transition-all duration-300"
-            >
-              <div className="text-2xl mb-2">{icon}</div>
-              <div className="text-[#F5CC5C] font-bold text-sm mb-0.5">{value}</div>
-              <div className="text-blue-300 text-xs">{label}</div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.7 }}
-          className="text-center"
-        >
-          <div className="bg-white/8 backdrop-blur-sm border border-white/15 rounded-2xl p-8 max-w-2xl mx-auto">
-            <h3 className="font-serif text-2xl font-bold text-white mb-2">
-              ¡Reserva tu stand ahora!
+            <h3 className="font-display text-2xl text-white mb-3 leading-snug">
+              No te quedes fuera de la feria más importante de Los Ríos.
             </h3>
-            <p className="text-blue-200 text-sm mb-6">
-              Más del 80% de los stands ya están reservados. No te quedes fuera de la feria más importante de Los Ríos.
+
+            <p className="text-white/40 text-sm leading-relaxed mb-6">
+              Más del 80% de los stands ya están reservados. La edición 2024 generó +$480,000 en ventas y 1,600 empleos temporales.
             </p>
-            <div className="flex flex-wrap gap-3 justify-center">
+
+            {/* Artistas 2025 */}
+            <div className="border-t border-white/8 pt-5 mb-6">
+              <div className="text-white/25 text-[10px] tracking-widest uppercase mb-3">Artistas confirmados 2025</div>
+              {[
+                'Maluma de Yo Me Llamo',
+                'Don Medardo y sus Players',
+                'Cristian Campuzano y su Orquesta',
+                'Mi Voz Quevedo · Premios $1,500',
+              ].map((a, i) => (
+                <div key={i} className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
+                  <span className="w-1 h-1 bg-[#C8922A] rounded-full flex-shrink-0" />
+                  <span className="text-white/50 text-xs">{a}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-2">
               <button
                 onClick={() => document.querySelector('#contacto')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-gold"
+                className="btn-gold w-full justify-center"
               >
-                Reservar mi stand
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                Reservar stand →
               </button>
               <button
                 onClick={() => document.querySelector('#contacto')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-outline-white"
+                className="btn-outline-white w-full justify-center text-center"
               >
                 Más información
               </button>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
+
+      {/* Gold bottom accent */}
+      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C8922A]/40 to-transparent" />
     </section>
   )
 }

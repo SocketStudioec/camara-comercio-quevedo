@@ -1,187 +1,178 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
-const news = [
+const articles = [
   {
-    category: 'Capacitación',
-    categoryColor: 'bg-blue-100 text-blue-700',
-    date: '21 Mayo 2025',
-    title: 'Cámara capacita a comerciantes y emprendedores para fortalecer el tejido empresarial',
-    excerpt: 'Nuevos programas de formación diseñados para fortalecer las capacidades de gestión, marketing y finanzas de los comerciantes de Quevedo y la región de Los Ríos.',
-    readTime: '3 min',
+    cat: 'Capacitación',
+    date: '21 May 2025',
+    title: 'La Cámara capacita a comerciantes y emprendedores para fortalecer el tejido empresarial de Quevedo',
+    excerpt: 'Nuevos programas de formación para fortalecer las capacidades de gestión, marketing y finanzas de los comerciantes locales.',
     featured: true,
   },
   {
-    category: 'ExpoQuevedo',
-    categoryColor: 'bg-amber-100 text-amber-700',
-    date: '15 Abril 2025',
-    title: 'Ya hay fecha para ExpoQuevedo 2025: La feria más importante de la región',
-    excerpt: 'Confirmadas las fechas del 19 al 21 de septiembre para la edición 2025. El Centro de Exposiciones del sector 20 de Febrero será nuevamente el escenario.',
-    readTime: '4 min',
+    cat: 'ExpoQuevedo',
+    date: '15 Abr 2025',
+    title: 'ExpoQuevedo 2025: fechas confirmadas y más de 210 locales esperados',
+    excerpt: 'El recinto ferial del sector 20 de Febrero acogerá la feria del 19 al 21 de septiembre con récord de participantes.',
     featured: false,
   },
   {
-    category: 'Innovación',
-    categoryColor: 'bg-rose-100 text-rose-700',
-    date: '5 Marzo 2025',
+    cat: 'Innovación',
+    date: '5 Mar 2025',
     title: 'Lanzamiento de Radio Online CCQ: nueva voz para el comercio quevedeño',
-    excerpt: 'La Cámara de Comercio de Quevedo moderniza su comunicación con el lanzamiento de su nueva emisora digital, conectando a la comunidad empresarial.',
-    readTime: '2 min',
+    excerpt: 'La Cámara moderniza su comunicación con su nueva emisora digital, conectando a toda la comunidad empresarial.',
     featured: false,
   },
   {
-    category: 'Logros',
-    categoryColor: 'bg-emerald-100 text-emerald-700',
-    date: '10 Enero 2025',
-    title: 'ExpoQuevedo 2024 generó más de $480.000 en ventas y 1.600 empleos temporales',
-    excerpt: 'La edición 2024 superó todas las expectativas con un impacto económico sin precedentes para los exhibidores y la ciudad de Quevedo.',
-    readTime: '5 min',
+    cat: 'Internacional',
+    date: '6 Ene 2025',
+    title: 'Quevedo se conecta con China: nuevas oportunidades comerciales para afiliados',
+    excerpt: 'Acuerdo de cooperación comercial abre puertas a mercados asiáticos para los empresarios de Los Ríos.',
     featured: false,
   },
 ]
 
+const catColors = {
+  'Capacitación': 'bg-blue-50 text-blue-700',
+  'ExpoQuevedo': 'bg-amber-50 text-amber-700',
+  'Innovación': 'bg-rose-50 text-rose-700',
+  'Internacional': 'bg-emerald-50 text-emerald-700',
+}
+
 export default function News() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 })
 
-  const featured = news[0]
-  const rest = news.slice(1)
+  const [featured, ...rest] = articles
 
   return (
-    <section id="noticias" ref={ref} className="relative py-20 md:py-28 bg-white overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-0 w-1/3 h-full bg-gradient-to-r from-slate-50 to-transparent" />
-      </div>
+    <section id="noticias" ref={ref} className="bg-[#FAF7F2] py-20 md:py-28">
+      <div className="max-w-7xl mx-auto px-6">
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12"
-        >
-          <div>
-            <div className="inline-flex items-center gap-2 bg-[#1B3A6B]/8 text-[#1B3A6B] text-xs font-semibold tracking-wider uppercase px-4 py-2 rounded-full mb-4">
-              Noticias y novedades
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-8 h-px bg-[#C8922A]" />
+              <span className="text-[#C8922A] text-[11px] font-semibold tracking-[0.25em] uppercase">Noticias</span>
             </div>
-            <h2 className="section-title mb-2">Mantente informado</h2>
-            <div className="gold-line" />
-          </div>
-          <a
+            <h2 className="font-display text-4xl md:text-5xl text-[#0D1F3C] leading-tight">
+              Mantente<br /><span className="italic text-[#C8922A]">informado.</span>
+            </h2>
+          </motion.div>
+
+          <motion.a
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
             href="https://www.facebook.com/ComercioQuevedo"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#1B3A6B] hover:text-[#D4A028] text-sm font-semibold flex items-center gap-1.5 transition-colors flex-shrink-0"
+            className="text-[#0D1F3C] text-sm font-semibold tracking-wide hover:text-[#C8922A] transition-colors flex items-center gap-2"
           >
-            Ver todas las noticias
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
-        </motion.div>
+            Ver todas las noticias →
+          </motion.a>
+        </div>
 
-        {/* Grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          {/* Featured */}
+        {/* Grid */}
+        <div className="grid md:grid-cols-3 gap-3">
+
+          {/* Featured article — 2 cols */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.1 }}
-            whileHover={{ y: -4, transition: { duration: 0.25 } }}
-            className="lg:col-span-3 group cursor-pointer"
+            className="md:col-span-2 group cursor-pointer bg-[#0D1F3C] relative overflow-hidden"
           >
-            <div className="bg-[#F8FAFC] rounded-2xl overflow-hidden border border-slate-100 shadow-card hover:shadow-card-hover transition-all duration-300 h-full">
-              {/* Image placeholder with gradient */}
-              <div className="h-52 bg-navy-gradient relative overflow-hidden">
-                <div className="absolute inset-0 bg-hero-pattern opacity-20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-16 h-16 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
-                  </svg>
-                </div>
-                <div className="absolute top-4 left-4">
-                  <span className={`${featured.categoryColor} text-xs font-bold px-3 py-1.5 rounded-full`}>
-                    {featured.category}
-                  </span>
-                </div>
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="w-16 h-0.5 bg-[#D4A028] rounded-full" />
-                </div>
+            {/* Abstract visual — líneas geométricas */}
+            <div className="h-52 relative overflow-hidden bg-gradient-to-br from-[#1B3A6B] to-[#0D1F3C]">
+              <div className="absolute inset-0 grid-pattern opacity-80" />
+              {/* Decorative abstract shapes */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 200" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#C8922A" stopOpacity="0"/>
+                    <stop offset="50%" stopColor="#C8922A" stopOpacity="0.6"/>
+                    <stop offset="100%" stopColor="#C8922A" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="80" x2="600" y2="120" stroke="url(#lineGrad)" strokeWidth="0.8"/>
+                <line x1="0" y1="100" x2="600" y2="70" stroke="url(#lineGrad)" strokeWidth="0.5"/>
+                <circle cx="300" cy="100" r="60" stroke="rgba(200,146,42,0.15)" strokeWidth="0.8" fill="none"/>
+                <circle cx="300" cy="100" r="100" stroke="rgba(200,146,42,0.08)" strokeWidth="0.5" fill="none"/>
+                <rect x="260" y="70" width="80" height="60" stroke="rgba(200,146,42,0.2)" strokeWidth="0.8" fill="none"/>
+              </svg>
+              <div className="absolute bottom-4 left-6">
+                <span className={`inline-block px-2.5 py-1 text-[10px] font-bold tracking-widest uppercase bg-[#C8922A] text-white`}>
+                  {featured.cat}
+                </span>
               </div>
+            </div>
 
-              <div className="p-6">
-                <div className="flex items-center gap-3 text-xs text-slate-400 mb-3">
-                  <span>{featured.date}</span>
-                  <span>·</span>
-                  <span>{featured.readTime} lectura</span>
-                </div>
-                <h3 className="font-serif text-xl font-bold text-slate-800 mb-3 group-hover:text-[#1B3A6B] transition-colors leading-snug">
-                  {featured.title}
-                </h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-4">{featured.excerpt}</p>
-                <div className="flex items-center gap-1.5 text-[#1B3A6B] text-sm font-semibold group-hover:gap-2.5 transition-all duration-200">
-                  Leer más
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
+            <div className="p-7">
+              <p className="text-white/30 text-[11px] mb-3 tracking-wide">{featured.date}</p>
+              <h3 className="font-display text-xl text-white mb-3 leading-snug group-hover:text-[#E8B84B] transition-colors duration-300">
+                {featured.title}
+              </h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-5">{featured.excerpt}</p>
+              <div className="flex items-center gap-2 text-[#C8922A] text-xs font-semibold">
+                Leer artículo
+                <motion.span
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >→</motion.span>
               </div>
             </div>
           </motion.div>
 
-          {/* Smaller cards */}
-          <div className="lg:col-span-2 flex flex-col gap-5">
-            {rest.map(({ category, categoryColor, date, title, excerpt, readTime }, i) => (
+          {/* Side articles */}
+          <div className="flex flex-col gap-3">
+            {rest.map(({ cat, date, title, excerpt }, i) => (
               <motion.div
                 key={title}
-                initial={{ opacity: 0, x: 30 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.2 + i * 0.12 }}
-                whileHover={{ y: -3, transition: { duration: 0.2 } }}
-                className="bg-white rounded-xl border border-slate-100 shadow-card hover:shadow-card-hover transition-all duration-300 p-5 group cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.2 + i * 0.1 }}
+                className="group cursor-pointer bg-white border border-[#E5E7EB] hover:border-[#0D1F3C]/20 p-5 transition-all duration-300 hover:shadow-[0_4px_20px_rgba(13,31,60,0.08)] flex-1"
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <span className={`${categoryColor} text-xs font-bold px-2.5 py-1 rounded-full`}>{category}</span>
-                  <span className="text-slate-400 text-xs ml-auto">{date}</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-[10px] font-bold tracking-widest uppercase px-2 py-1 ${catColors[cat] || 'bg-gray-50 text-gray-600'}`}>
+                    {cat}
+                  </span>
+                  <span className="text-[#9CA3AF] text-[11px]">{date}</span>
                 </div>
-                <h3 className="font-serif text-base font-bold text-slate-800 mb-2 group-hover:text-[#1B3A6B] transition-colors leading-snug line-clamp-2">
+                <h4 className="font-display text-sm text-[#0D1F3C] leading-snug mb-2 group-hover:text-[#C8922A] transition-colors duration-200 line-clamp-3">
                   {title}
-                </h3>
-                <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 mb-3">{excerpt}</p>
-                <div className="flex items-center gap-1 text-[#1B3A6B] text-xs font-semibold">
-                  Leer más
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
+                </h4>
+                <p className="text-[#9CA3AF] text-xs leading-relaxed line-clamp-2">{excerpt}</p>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Social follow */}
+        {/* Social follow bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 p-6 bg-[#F8FAFC] rounded-2xl border border-slate-100"
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-10 border border-[#0D1F3C]/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
-          <span className="text-slate-600 text-sm">Síguenos para más noticias:</span>
-          <div className="flex gap-3">
+          <p className="text-[#6B7280] text-sm">Síguenos para noticias y novedades del gremio</p>
+          <div className="flex gap-2">
             {[
-              { label: 'Facebook', href: 'https://www.facebook.com/ComercioQuevedo', color: 'bg-blue-600 hover:bg-blue-700', icon: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z' },
-              { label: 'Instagram', href: 'https://www.instagram.com/camaraquevedo/', color: 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600', icon: 'M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M6.5 19.5h11a3 3 0 003-3v-11a3 3 0 00-3-3h-11a3 3 0 00-3 3v11a3 3 0 003 3z' },
-            ].map(({ label, href, color, icon }) => (
+              { label: 'Facebook', href: 'https://www.facebook.com/ComercioQuevedo', bg: 'bg-[#1877F2]' },
+              { label: 'Instagram', href: 'https://www.instagram.com/camaraquevedo/', bg: 'bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737]' },
+            ].map(({ label, href, bg }) => (
               <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${color} text-white text-sm font-semibold px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 shadow-sm`}
+                className={`${bg} text-white text-xs font-semibold px-4 py-2.5 tracking-wide hover:opacity-90 transition-opacity`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
-                </svg>
                 {label}
               </a>
             ))}
